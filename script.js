@@ -38,10 +38,9 @@ d3.csv('wealth-health-2014.csv', d3.autoType).then(data=>{
         .range(d3.schemeSet2)
 
     const tooltip = d3.select('.tooltip')
-        .attr('position', 'fixed')
-        .html("Tooltip in action")
-
-    
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
     svg.append('g')
         .selectAll("dot")
@@ -66,10 +65,21 @@ d3.csv('wealth-health-2014.csv', d3.autoType).then(data=>{
                 // show the tooltip
                 console.log('entered')
                 console.log(d3.pointer(event, window))
-                tooltip.style("top", (d3.pointer(event, window)[1])+"px").style("left",(d3.pointer(event, window)[0])+"px")
+                var html = "Country: " + d.Country + "</br>" +
+                            "Region: " + d.Region + "</br>" +
+                            "Population: " + d3.format(",")(d.Population) + "</br>" +
+                            "Income: " + d3.format(",")(d.Income) + "</br>" +
+                            "Life Expectancy: " + d3.format(".3")(d.LifeExpectancy) + "</br>";
+                tooltip.html(html)
+                    .style("top", (d3.pointer(event, window)[1])+"px")
+                    .style("left",(d3.pointer(event, window)[0])+"px")
+                    .style("opacity", 0.9)
+                
+
             })
             .on("mouseleave", (event, d) => {
                 // hide the tooltip
+                tooltip.style("opacity", 0);
             })
             .style("fill", d=>colorScale(d.Region));
 
